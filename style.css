@@ -1,0 +1,19 @@
+.transparent_button {
+    font-family: San Francisco;
+    font-weight: bold;
+    border: none;
+    font-size: 28px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #808080;
+}
+
+.transparent_button:hover {
+    color: #FFFFFF;
+}
+
+.transparent_button:active {
+    font-family: San Francisco;
+    font-weight: bold;
+    border: none;
+    font-size: 22;
+}

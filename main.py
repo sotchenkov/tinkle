@@ -4,7 +4,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
-COST = "29 596,24 ₽"
+COST = "10 292 596,24 ₽"
 CHANGE = "–395,2 ₽ · 1,45%"
 
 
@@ -15,7 +15,6 @@ class Window(Gtk.Window):
 
         # Свойства окна
         self.set_default_size(500, 700)
-        self.set_position(Gtk.WindowPosition.CENTER)
         self.set_decorated(False)
         self.set_skip_taskbar_hint(True)
         self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)
@@ -32,7 +31,38 @@ class Window(Gtk.Window):
 
         self.draw_area = Gtk.DrawingArea()
         self.draw_area.connect("draw", self.on_draw)
-        self.add(self.draw_area)
+
+        # Create a label
+        label = Gtk.Label()
+
+        # Create an EventBox and add the label to it
+        event_box = Gtk.EventBox()
+
+        # event_box.set_size_request(50, 70)
+        event_box.add(label)
+
+        ###############
+        button = Gtk.ToggleButton(label="^")
+        # button.get_child().set_angle(180)
+        # Load the CSS file
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_path("style.css")
+
+        # ToDo Добавить анимацию переворота
+
+        # Apply the CSS style to the button
+        context = button.get_style_context()
+        context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        context.add_class("transparent_button")
+        fixed = Gtk.Fixed()
+        fixed.put(button, 415, 95)
+        button.connect("clicked", self.on_click_me_clicked, fixed)
+
+        # Create an overlay and add the drawing area and label to it
+        overlay = Gtk.Overlay()
+        overlay.add_overlay(self.draw_area)
+        overlay.add_overlay(fixed)
+        self.add(overlay)
 
         screen = self.get_screen()
         mon_geom = screen.get_display().get_primary_monitor().get_geometry()
@@ -41,21 +71,21 @@ class Window(Gtk.Window):
         self.move(screen_size[0] - 500, 35)
         self.show_all()
 
+    def on_click_me_clicked(self, button, fixed, *kwargs):
+        if button.get_active():
+            button.set_label("^")
+            button.get_child().set_angle(180)
+            fixed.move(button, 415, 80)
+
+            # Add any additional actions or visual changes here
+        else:
+            button.set_label("^")
+            fixed.move(button, 415, 95)
+
+            # Revert any additional actions or visual changes here
+        print("Button clicked")
+
     def on_draw(self, widget, cr):
-        # cr.set_operator(cairo.OPERATOR_SOURCE)
-        # cr.set_source_rgba(0, 0, 0.5, 0.5)
-        # cr.set_operator(cairo.OPERATOR_DEST_OVER)
-        # cr.paint()
-
-        # заливка цветом фона
-        # cr.set_operator(cairo.OPERATOR_SOURCE)
-        # cr.set_source_rgba(0, 0, 0.5, 0.5)
-        # cr.set_operator(cairo.OPERATOR_DEST_OVER)
-        # cr.fill()
-
-        # размеры холста
-        WIDTH, HEIGHT = 500, 700
-
         # координаты прямоугольника и радиус скругления углов
         x, y, width, height, radius = 0, 0, 490, 700, 25
 
@@ -125,9 +155,9 @@ class Window(Gtk.Window):
         cr.arc(x + radius, y + radius, radius, 180 * (3.14 / 180), 270 * (3.14 / 180))
         cr.close_path()
 
-        # отрисовка прямоугольника
         cr.fill()
 
+        # отрисовка прямоугольника
         self.draw_cost_change(cr)
 
     def draw_cost_change(self, cr):
@@ -173,7 +203,7 @@ class Window(Gtk.Window):
                             cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(32)
         cr.move_to(425, 75)
-        cr.show_text("$")
+        cr.show_text("⚙")
 
         cr.fill()
 
