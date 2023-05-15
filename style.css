@@ -2,9 +2,11 @@
     font-family: San Francisco;
     font-weight: bold;
     border: none;
+    outline: none;
     font-size: 28px;
     background-color: rgba(0, 0, 0, 0);
     color: #808080;
+    box-shadow: 0px 0px 0px transparent
 }
 
 .transparent_button:hover {
@@ -15,5 +17,27 @@
     font-family: San Francisco;
     font-weight: bold;
     border: none;
-    font-size: 22;
+    font-size: 22px;
+}
+
+.settings_btn {
+    font-family: San Francisco;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    font-size: 28px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #808080;
+    box-shadow: 0px 0px 0px transparent
+}
+
+.settings_btn:hover {
+    color: #FFFFFF;
+}
+
+.settings_btn:active {
+    font-family: San Francisco;
+    font-weight: bold;
+    border: none;
+    font-size: 28px;
 }
