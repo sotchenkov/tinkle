@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "tinkle"
+version = "0.1.0"
+description = "Linux GTK widget for tracking the status of an investment portfolio in Tinkoff Investments (coursework)"
+authors = ["Alexey <sotchenkoff@gmail.com>"]
+license = "Apache-2.0 license"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pycairo = "^1.23.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
