@@ -11,70 +11,35 @@ COST = "10 292 596,24 ₽"
 CHANGE = "–395,2 ₽ · 1,45%"
 
 
-class TinleUI(Gtk.Window):
+class TinkleUI(Gtk.Window):
 
     def __init__(self):
         super().__init__(title="tinkle")
 
-        # Свойства окна
-        self.set_default_size(500, 710)
-        self.set_decorated(False)
-        self.set_skip_taskbar_hint(True)
-        self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)
-        self.set_app_paintable(True)
-
-        # Подключение сигналов
-        self.connect("delete-event", Gtk.main_quit)
-
-        # Прозрачность
-        self.set_visual(Gdk.Screen.get_default().get_rgba_visual())
-
-        self.draw_area = Gtk.DrawingArea()
-        self.draw_area.connect("draw", self.draw_background)
-
-        # Create a label
-        label = Gtk.Label()
-
-        # Create an EventBox and add the label to it
-        event_box = Gtk.EventBox()
-
-        event_box.add(label)
-
-        self.button = Gtk.ToggleButton(label="^")
-        self.button.set_size_request(100, 50)
-
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_path("./ui/static/css/style.css")
-
-        # Apply the CSS style to the button
-        context = self.button.get_style_context()
-        context.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        context.add_class("transparent_button")
-        fixed = Gtk.Fixed()
-        fixed.put(self.button, 385, 87)
-        self.button.connect("clicked", self.on_click_me_clicked, fixed)
-
-        button1 = Gtk.ToggleButton(label="⚙")
-        button1.set_size_request(100, 50)
-
-        # Apply the CSS style to the button
-        context1 = button1.get_style_context()
-        context1.add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        context1.add_class("settings_btn")
-        fixed.put(button1, 385, 40)
-        button1.connect("clicked", self.on_click_settings_btn, fixed)
-
-        # Create an overlay and add the drawing area and label to it
-        self.overlay = Gtk.Overlay()
-        self.add(self.overlay)
-        self.overlay.add_overlay(self.draw_area)
-        self.overlay.add_overlay(fixed)
-
-        screen = self.get_screen()
-        mon_geom = screen.get_display().get_primary_monitor().get_geometry()
+        mon_geom = self.get_screen().get_display().get_primary_monitor().get_geometry()
         screen_size = [mon_geom.width - mon_geom.x, mon_geom.height - mon_geom.y]
 
+        self.set_default_size(500, 710)
+        self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)  # widget features
+        self.set_app_paintable(True)
+        self.set_visual(Gdk.Screen.get_default().get_rgba_visual())  # transparent
         self.move(screen_size[0] - 500, 35)
+
+        self.draw_area, self.css_provider, self.fixed, self.overlay = Gtk.DrawingArea(), Gtk.CssProvider(), \
+            Gtk.Fixed(), Gtk.Overlay()
+
+        self.css_provider.load_from_path("./ui/static/css/style.css")  # style for buttons
+
+        self.add(self.overlay)
+        self.overlay.add_overlay(self.draw_area)
+        self.overlay.add_overlay(self.fixed)
+
+        self.draw_area.connect("draw", self.draw_background)
+        self.connect("delete-event", Gtk.main_quit)
+
+        self.show_arrow_button()
+        self.show_settings_button()
+
         self.show_all()
 
         animations.app_start_animation(self)
@@ -96,7 +61,6 @@ class TinleUI(Gtk.Window):
         cr.arc(x + radius, y + radius, radius, 180 * (3.14 / 180), 270 * (3.14 / 180))
         cr.close_path()
 
-        # отрисовка прямоугольника
         cr.fill()
         self.queue_draw()
 
@@ -107,6 +71,30 @@ class TinleUI(Gtk.Window):
         cr.set_font_size(size)
         cr.move_to(*coordinates)
         cr.show_text(text)
+
+    def show_arrow_button(self):
+        self.arrow_button = Gtk.ToggleButton(label="^")
+        self.arrow_button.set_size_request(100, 50)
+
+        arrow_button_context = self.arrow_button.get_style_context()
+        arrow_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        arrow_button_context.add_class("transparent_button")
+
+        self.fixed.put(self.arrow_button, 385, 87)
+
+        self.arrow_button.connect("clicked", self.on_click_me_clicked, self.fixed)
+
+    def show_settings_button(self):
+        settings_button = Gtk.ToggleButton(label="⚙")
+        settings_button.set_size_request(100, 50)
+
+        settings_button_context = settings_button.get_style_context()
+        settings_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        settings_button_context.add_class("settings_btn")
+
+        self.fixed.put(settings_button, 385, 40)
+
+        settings_button.connect("clicked", self.on_click_settings_btn, self.fixed)
 
     def draw_background(self, widget, cr):
         self.painter(cr, (0, 0, 0.5, 0.5), True, 0, 0, list(self.get_size())[0] - 10, list(self.get_size())[1])
@@ -124,8 +112,9 @@ class TinleUI(Gtk.Window):
     def on_click_settings_btn(self, button, *kwargs):
         if button.get_active():
             self.current_size = list(self.get_size())[1]
+            self.arrow_button.hide()
 
-            animations.settings_icon_rotate_left_animation(self, button)
+            animations.settings_icon_rotate_left_animation(button)
 
             self.draw_area.connect("draw", self.draw_settings_menu_background)
 
@@ -136,9 +125,9 @@ class TinleUI(Gtk.Window):
             if list(self.get_size())[1] == 710 and self.current_size == 165:
                 animations.hide_settings_if_minimized_window_animation(self)
 
-            self.button.show()
+            self.arrow_button.show()
 
-            animations.settings_icon_rotate_right_animation(self, button)
+            animations.settings_icon_rotate_right_animation(button)
 
             self.draw_area.connect("draw", self.draw_background)
             self.queue_draw()
@@ -158,5 +147,5 @@ class TinleUI(Gtk.Window):
                 animations.arrow_button_rotate_up_animation(self, button, fixed)
 
 
-win = TinleUI()
+win = TinkleUI()
 Gtk.main()
