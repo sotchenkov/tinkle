@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 pycairo = "^1.23.0"
+tinkoff-investments = "^0.2.0b57"
 
 
 [build-system]
