@@ -5,10 +5,32 @@ gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk, Gdk, GLib
 
-from src.ui import animations
+from ui import animations
+from ui.static.ui_colors import *
 
-COST = "10 292 596,24 ₽"
-CHANGE = "–395,2 ₽ · 1,45%"
+COST = 10292596
+CHANGE = 3444.23
+PERSENTS = "10.1%"
+
+
+def which_color_bg(num) -> ():
+    return TEXT_BG_RED_COLOR if num < 0 else TEXT_BG_GREEN_COLOR
+
+
+def which_color_text(num) -> ():
+    return TEXT_RED_COLOR if num < 0 else TEXT_GREEN_COLOR
+
+
+def pretty_str_from_float(float_num) -> str:
+    return '{0:,}'.format(float_num).replace(',', ' ').replace('.', ',')
+
+
+def change_cost_bg_size(change_num):
+    return len(str(change_num)) * 11 + 110
+
+
+def check_frame(num, window_size):
+    return change_cost_bg_size(num) + 70, 105
 
 
 class TinkleUI(Gtk.Window):
@@ -70,7 +92,7 @@ class TinkleUI(Gtk.Window):
         cr.set_source_rgba(*rgba)
         cr.set_font_size(size)
         cr.move_to(*coordinates)
-        cr.show_text(text)
+        cr.show_text(str(text))
 
     def show_arrow_button(self):
         self.arrow_button = Gtk.ToggleButton(label="^")
@@ -97,17 +119,17 @@ class TinkleUI(Gtk.Window):
         settings_button.connect("clicked", self.on_click_settings_btn, self.fixed)
 
     def draw_background(self, widget, cr):
-        self.painter(cr, (0, 0, 0.5, 0.5), True, 0, 0, list(self.get_size())[0] - 10, list(self.get_size())[1])
-        self.painter(cr, (0, 0, 0.5, 0.9), False, 20, 20, 450, 125)
-        self.painter(cr, (0, 0, 0.5, 0.9), False, 20, 165, 450, 525)
-        self.painter(cr, (0.9, 0, 0, 0.4), False, 45, 90, 168, 25, 10)
-
+        self.painter(cr, BG_DARK_COLOR, True, 0, 0, list(self.get_size())[0] - 10, list(self.get_size())[1])
+        self.painter(cr, BLOCKS_DARK_COLOR, False, 20, 20, 450, 125)
+        self.painter(cr, BLOCKS_DARK_COLOR, False, 20, 165, 450, 525)
+        self.painter(cr, which_color_bg(CHANGE), False, 45, 90, change_cost_bg_size(CHANGE), 25, 10)
+        # 168
         self.draw_text(cr)
 
     def draw_text(self, cr):
-        self.show_text(cr, (0.9, 0.9, 0.9, 0.9), 28, (45, 75), COST)
-        self.show_text(cr, (.8, 0, 0, 0.9), 16, (63, 108), CHANGE)
-        self.show_text(cr, (0.9, 0.9, 0.9, 0.5), 16, (240, 107), "за всё время")
+        self.show_text(cr, MAIN_TEXT_COLOR, 28, (45, 75), pretty_str_from_float(COST) + ROUBLE)
+        self.show_text(cr, which_color_text(CHANGE), 16, (63, 108), pretty_str_from_float(CHANGE) + DOT + PERSENTS)
+        self.show_text(cr, SECONDARY_TEXT_COLOR, 16, check_frame(CHANGE, self.get_size()), "за всё время")
 
     def on_click_settings_btn(self, button, *kwargs):
         if button.get_active():
@@ -133,7 +155,7 @@ class TinkleUI(Gtk.Window):
             self.queue_draw()
 
     def draw_settings_menu_background(self, widget, cr):
-        self.painter(cr, (0.1, 0.1, 0.1, 0.97), False, 20, 20, list(self.get_size())[0] - 50,
+        self.painter(cr, SETTINGS_BG_COLOR, False, 20, 20, list(self.get_size())[0] - 50,
                      list(self.get_size())[1] - 40)
 
     def on_click_me_clicked(self, button, fixed):
