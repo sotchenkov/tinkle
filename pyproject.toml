@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.10"
 pycairo = "^1.23.0"
 tinkoff-investments = "^0.2.0b57"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
