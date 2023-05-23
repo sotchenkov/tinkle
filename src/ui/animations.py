@@ -1,4 +1,5 @@
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
+import time
 
 
 def resize_animation_master(window, current_width, current_height, target_width, target_height, duration, steps):
@@ -63,3 +64,6 @@ def arrow_button_rotate_down_animation(window, button, fixed):
 
     resize_animation_master(window, list(window.get_size())[0], list(window.get_size())[1], list(window.get_size())[0],
                             list(window.get_size())[1] - 545, 400, 40)
+
+
+

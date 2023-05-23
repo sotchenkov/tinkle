@@ -41,3 +41,8 @@
     border: none;
     font-size: 28px;
 }
+
+.scroll_window {
+    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.5);
+}

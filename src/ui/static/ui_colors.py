@@ -5,4 +5,5 @@ BG_DARK_COLOR, BLOCKS_DARK_COLOR = (0, 0, 0, 0.7), (28 / 255, 28 / 255, 30 / 255
 SETTINGS_BG_COLOR = (28 / 255, 28 / 255, 30 / 255, 0.9)
 
 ROUBLE = " ₽"
-DOT = " · "
+NORMAL_DOT = " · "
+BOLD_DOT = " • "

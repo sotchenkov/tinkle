@@ -74,11 +74,11 @@ class TInvest:
 
     @staticmethod
     def save_instrument_names(instrument_names) -> None:
-        with open('data/instrument_names.json', 'w', encoding='UTF-8') as names:
+        with open('api/data/instrument_names.json', 'w', encoding='UTF-8') as names:
             names.write(json.dumps(instrument_names))
 
     def load_instrument_names(self) -> None:
-        with open('data/instrument_names.json', 'r', encoding='UTF-8') as names:
+        with open('api/data/instrument_names.json', 'r', encoding='UTF-8') as names:
             self.instrument_names = json.load(names)
 
     def get_account_positions(self, client):
@@ -97,36 +97,34 @@ class TInvest:
         }
 
     def get_portfolio_cost(self, client):
-        portfolio = client.operations.get_portfolio(account_id=self.main_account_id)  # DRY check tomorrow
-        return quantity_to_float(portfolio.total_amount_portfolio), quantity_to_float(portfolio.expected_yield)
+        portfolio = client.operations.get_portfolio(account_id=self.main_account_id)
+        return quantity_to_float(portfolio.total_amount_portfolio), round((quantity_to_float(portfolio.total_amount_portfolio) * (quantity_to_float(portfolio.expected_yield) / 100)), 2), quantity_to_float(portfolio.expected_yield)
 
-
-if __name__ == "__main__":
-    load_env_variables()
-
-    if not check_token():
-        set_token(str(input("token: ")))
-        load_env_variables()
-
-    with Client(os.environ["INVEST_TOKEN"]) as client:
-        if check_main_account() is None:
-            accounts = get_accounts(client)
-            for accs in accounts:
-                print(accs[1])
-            set_main_account(accounts[int(input("choose acc: "))][0])
-            load_env_variables()
-
-        t = TInvest()
-        print(t.get_portfolio_cost(client))
-        for position in t.get_account_positions(client):
-            try:
-                t.load_instrument_names()
-                print(t.get_position_info(position))
-            except Exception:
-                t.save_instrument_names(t.get_instrument_names(client))
-                t.load_instrument_names()
-                print(t.get_position_info(position))
-
-
-
-
+#
+# if __name__ == "__main__":
+#     load_env_variables()
+#     t = TInvest()
+#     t.get_portfolio_cost(t.client)
+#
+#     if not check_token():
+#         set_token(str(input("token: ")))
+#         load_env_variables()
+#
+#     with Client(os.environ["INVEST_TOKEN"]) as client:
+#         if check_main_account() is None:
+#             accounts = get_accounts(client)
+#             for accs in accounts:
+#                 print(accs[1])
+#             set_main_account(accounts[int(input("choose acc: "))][0])
+#             load_env_variables()
+#
+#         t = TInvest()
+#         print(t.get_portfolio_cost(client))
+#         for position in t.get_account_positions(client):
+#             try:
+#                 t.load_instrument_names()
+#                 print(t.get_position_info(position))
+#             except Exception:
+#                 t.save_instrument_names(t.get_instrument_names(client))
+#                 t.load_instrument_names()
+#                 print(t.get_position_info(position))
