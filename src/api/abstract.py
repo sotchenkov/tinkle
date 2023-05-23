@@ -5,21 +5,36 @@ import os
 
 
 def check_environment():
-    load_env_variables()
-
-    if not check_token():
+    try:
+        load_env_variables()
+        with Client(os.environ["INVEST_TOKEN"]) as client:
+            if check_main_account() is None:
+                return "NoAccount"
+    except:
         return "NoToken"
+
+    # if not check_token():
+    #     return "NoToken"
         # set_token(str(input("token: ")))
         # load_env_variables()
 
-    with Client(os.environ["INVEST_TOKEN"]) as client:
-        if check_main_account() is None:
-            return "NoAccount"
+    # with Client(os.environ["INVEST_TOKEN"]) as client:
+    #     if check_main_account() is None:
+    #         return "NoAccount"
             # accounts = get_accounts(client)
             # for accs in accounts:
             #     print(accs[1])
             # set_main_account(accounts[int(input("choose acc: "))][0])
             # load_env_variables()
+
+
+def get_accountss():
+    check_environment()
+    with Client(os.environ["INVEST_TOKEN"]) as client:
+        # TInvest().get_accounts(client)
+        return get_accountsss(client)
+
+        # return TInvest().get_account_positions()
 
 
 def portfolio_cost():
@@ -49,6 +64,3 @@ def instruments_cost():
         if len(pos) == 0:
             return "NoInstruments"
         return pos
-
-
-# ToDO: Добавить расчёт топ-5 самых доходных

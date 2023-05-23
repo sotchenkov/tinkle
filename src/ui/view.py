@@ -239,3 +239,5 @@ class TinkleUI(Gtk.Window):
         call_repeatedly(3, self.update_instruments_cost)
 
         self.image.hide()
+
+

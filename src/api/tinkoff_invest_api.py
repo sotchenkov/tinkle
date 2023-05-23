@@ -23,19 +23,19 @@ def check_main_account():
 
 
 def set_token(token: str):
-    with open('data/.env', 'w') as env:
+    with open('./api/data/.env', 'w') as env:
         env.write(f'INVEST_TOKEN = {token}')
 
 
 def set_main_account(account_id: str):
-    with open('data/.env', 'a') as env:
+    with open('./api/data/.env', 'a') as env:
         env.write(f'\nMAIN_ACCOUNT = {account_id}')
 
 
-def get_accounts(client):
+def get_accountsss(client):
     available_accounts = []
     for account in client.users.get_accounts().accounts:
-        if account.status == 2:
+        if account.status == 2 and account.name != "Инвесткопилка":
             available_accounts.append((account.id, account.name))
 
     return available_accounts if len(available_accounts) > 0 else None
