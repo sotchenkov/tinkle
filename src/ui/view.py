@@ -51,13 +51,13 @@ class TinkleUI(Gtk.Window):
     def __init__(self):
         super().__init__(title="tinkle")
         mon_geom = self.get_screen().get_display().get_primary_monitor().get_geometry()
-        screen_size = [mon_geom.width - mon_geom.x, mon_geom.height - mon_geom.y]
+        self.screen_size = [mon_geom.width - mon_geom.x, mon_geom.height - mon_geom.y]
 
         self.set_default_size(500, 710)
         self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)  # widget features
         self.set_app_paintable(True)
         self.set_visual(Gdk.Screen.get_default().get_rgba_visual())  # transparent
-        self.move(screen_size[0] - 500, 35)
+        self.move(self.screen_size[0] - 500, 35)
 
         self.draw_area, self.css_provider, self.fixed, self.overlay = Gtk.DrawingArea(), Gtk.CssProvider(), \
             Gtk.Fixed(), Gtk.Overlay()
@@ -75,6 +75,8 @@ class TinkleUI(Gtk.Window):
 
         self.show_arrow_button()
         self.show_settings_button()
+        self.show_position_change_buttons()
+        self.show_logout_button()
         self.show_instruments_preloader()
 
         self.cost = 0.0
@@ -146,6 +148,62 @@ class TinkleUI(Gtk.Window):
 
         settings_button.connect("clicked", self.on_click_settings_btn, self.fixed)
 
+    def show_position_change_buttons(self):
+        self.move_left_up_button = Gtk.ToggleButton(label="▢")
+        self.move_left_up_button.set_size_request(100, 50)
+        settings_button_context = self.move_left_up_button.get_style_context()
+        settings_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        settings_button_context.add_class("change_position_button")
+        self.move_left_up_button.connect("clicked", self.move_left_up)
+
+        self.move_right_down_button = Gtk.ToggleButton(label="▢")
+        self.move_right_down_button.set_size_request(100, 50)
+        settings_button_context = self.move_right_down_button.get_style_context()
+        settings_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        settings_button_context.add_class("change_position_button")
+        self.move_right_down_button.connect("clicked", self.move_right_down)
+
+        self.move_right_up_button = Gtk.ToggleButton(label="▢")
+        self.move_right_up_button.set_size_request(100, 50)
+        settings_button_context = self.move_right_up_button.get_style_context()
+        settings_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        settings_button_context.add_class("change_position_button")
+        self.move_right_up_button.connect("clicked", self.move_right_up)
+
+        self.move_left_down_button = Gtk.ToggleButton(label="▢")
+        self.move_left_down_button.set_size_request(100, 50)
+        settings_button_context = self.move_left_down_button.get_style_context()
+        settings_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        settings_button_context.add_class("change_position_button")
+        self.move_left_down_button.connect("clicked", self.move_left_down)
+
+    def move_left_up(self, *kwargs):
+        self.move(10, 35)
+
+    def move_right_down(self, *kwargs):
+        self.move(self.screen_size[0] - 500, self.screen_size[1] - 717)
+
+    def move_right_up(self, *kwargs):
+        self.move(self.screen_size[0] - 500, 35)
+
+    def move_left_down(self, *kwargs):
+        self.move(10, self.screen_size[1] - 717)
+
+    def show_logout_button(self):
+        self.loguot_button = Gtk.ToggleButton(label="logout")
+        self.loguot_button.set_size_request(100, 50)
+        settings_button_context = self.loguot_button.get_style_context()
+        settings_button_context.add_provider(self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        settings_button_context.add_class("portfolio_name_button")
+        self.loguot_button.connect("clicked", self.logout_clicked)
+
+    def logout_clicked(self, *kwargs):
+        from ui.auth import TinkleAuth
+        self.destroy()
+        t = TinkleAuth()
+        Gtk.main()
+        api.abstract.logout()
+
     def show_instruments_preloader(self):
         pixbufanim = GdkPixbuf.PixbufAnimation.new_from_file("./ui/static/loader.gif")
         self.image.set_from_animation(pixbufanim)
@@ -188,9 +246,22 @@ class TinkleUI(Gtk.Window):
     def on_click_settings_btn(self, button, *kwargs):
         if button.get_active():
             self.current_size = list(self.get_size())[1]
-            self.arrow_button.hide()
 
             animations.settings_icon_rotate_left_animation(button)
+
+            self.arrow_button.hide()
+
+            self.fixed.put(self.move_right_down_button, 240, 330)
+            self.fixed.put(self.move_left_up_button, 160, 260)
+            self.fixed.put(self.move_right_up_button, 240, 260)
+            self.fixed.put(self.move_left_down_button, 160, 330)
+            self.move_left_up_button.show()
+            self.move_right_down_button.show()
+            self.move_right_up_button.show()
+            self.move_left_down_button.show()
+
+            self.fixed.put(self.loguot_button, 200, 610)
+            self.loguot_button.show()
 
             self.draw_area.connect("draw", self.draw_settings_menu_background)
 
@@ -202,6 +273,11 @@ class TinkleUI(Gtk.Window):
                 animations.hide_settings_if_minimized_window_animation(self)
 
             self.arrow_button.show()
+            self.fixed.remove(self.move_left_up_button)
+            self.fixed.remove(self.move_right_down_button)
+            self.fixed.remove(self.move_left_down_button)
+            self.fixed.remove(self.move_right_up_button)
+            self.fixed.remove(self.loguot_button)
 
             animations.settings_icon_rotate_right_animation(button)
 
@@ -239,5 +315,3 @@ class TinkleUI(Gtk.Window):
         call_repeatedly(3, self.update_instruments_cost)
 
         self.image.hide()
-
-

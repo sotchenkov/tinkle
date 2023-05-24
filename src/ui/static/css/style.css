@@ -56,3 +56,25 @@
     border: none;
     font-size: 18px;
 }
+
+.change_position_button {
+    font-family: San Francisco;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    font-size: 68px;
+    background-color: rgba(0, 0, 0, 0);
+    color: #808080;
+    box-shadow: 0px 0px 0px transparent
+}
+
+.change_position_button:hover {
+    color: #FFFFFF;
+}
+
+.change_position_button:active {
+    font-family: San Francisco;
+    font-weight: bold;
+    border: none;
+    font-size: 64px;
+}

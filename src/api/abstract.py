@@ -1,5 +1,4 @@
 import time
-
 from api.tinkoff_invest_api import *
 import os
 
@@ -13,28 +12,15 @@ def check_environment():
     except:
         return "NoToken"
 
-    # if not check_token():
-    #     return "NoToken"
-        # set_token(str(input("token: ")))
-        # load_env_variables()
 
-    # with Client(os.environ["INVEST_TOKEN"]) as client:
-    #     if check_main_account() is None:
-    #         return "NoAccount"
-            # accounts = get_accounts(client)
-            # for accs in accounts:
-            #     print(accs[1])
-            # set_main_account(accounts[int(input("choose acc: "))][0])
-            # load_env_variables()
+def logout():
+    os.remove('./api/data/.env')
 
 
 def get_accountss():
     check_environment()
     with Client(os.environ["INVEST_TOKEN"]) as client:
-        # TInvest().get_accounts(client)
         return get_accountsss(client)
-
-        # return TInvest().get_account_positions()
 
 
 def portfolio_cost():
@@ -44,7 +30,7 @@ def portfolio_cost():
 
 
 def _most_profitable(instruments):
-    pass
+    return sorted(instruments, key=lambda x: x['cost_change_percents'], reverse=True)
 
 
 def instruments_cost():
@@ -63,4 +49,5 @@ def instruments_cost():
 
         if len(pos) == 0:
             return "NoInstruments"
-        return pos
+
+        return _most_profitable(pos)
