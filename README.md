@@ -33,29 +33,29 @@ Get a Tinkoff Investment [Token](https://www.tinkoff.ru/invest/open-api/)
 
 Insert the token into the widget and select the desired portfolio
 
-![Login](images/login_screen.png)
+![Login](images/login_screen.png =250x)
 
 
 Now you can use the widget
 
-![Main](images/main_screen.png)
+![Main](images/main_screen.png =250x)
 
 
 ### Positioning
 
 You can change the position of the widget
 
-![Position](images/change_position.png)
+![Position](images/change_position.png =250x)
 
 
 It will be moved to the selected corner
 
-![Screen](images/fullscreen.png)
+![Screen](images/fullscreen.png =250x)
 
 
 You can also minimize it
 
-![Minimal](images/minimalistic.png)
+![Minimal](images/minimalistic.png =250x)
 
 
 ### Exit
