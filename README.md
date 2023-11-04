@@ -35,6 +35,7 @@ Insert the token into the widget and select the desired portfolio
 
 <img src="images/login_screen.png" width="200">
 
+
 Now you can use the widget
 
 <img src="images/main_screen.png" width="200">
@@ -44,6 +45,7 @@ Now you can use the widget
 You can change the position of the widget
 
 <img src="images/change_position.png" width="200">
+
 
 It will be moved to the selected corner
 
