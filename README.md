@@ -43,15 +43,15 @@ Now you can use the widget
 
 You can change the position of the widget
 
-<img src="iimages/change_position.png" width="200">
+<img src="images/change_position.png" width="200">
 
 It will be moved to the selected corner
 
-<img src="images/fullscreen.png" width="200">
+<img src="images/fullscreen.png" width="500">
 
 You can also minimize it
 
-<img src="images/minimalistic.png" width="200">
+<img src="images/minimalistic.png" width="300">
 
 ### Exit
 
