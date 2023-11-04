@@ -6,7 +6,6 @@ Linux [GTK](https://www.gtk.org/) widget for tracking the status of an investmen
 ### Requirements
 
 - Linux
-- PulseAudio
 - GTK+3
 
 To install Python bindings for GTK (PyGObject) follow official [guide](https://pygobject.readthedocs.io/en/latest/getting_started.html).
