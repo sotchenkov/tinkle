@@ -60,4 +60,4 @@ You can also minimize it
 
 ### Exit
 
-Use 'Ctrl+C' to exit the widget
+Use `Ctrl+C` to exit the widget
